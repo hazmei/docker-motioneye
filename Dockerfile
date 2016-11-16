@@ -5,6 +5,7 @@ MAINTAINER hazmei
 # Enable systemd
 ENV INITSYSTEM on
 ENV TAG 0.1
+
 RUN apt-get update \
 	&& apt-get install -qy wget \
 	libjpeg8 \
