@@ -13,4 +13,4 @@ Container for motionEye, a web-based user interface for motion.
 ## Usage
 
 Fire up an instance with web interface available on port 8000:  
-`docker run -t --privileged --device=/dev/vcsm --device=/dev/vchiq 8000:8765 sparrow/motioneye`
+`docker run -ti --device=/dev/video0 -p 8000:8765 hazmei/motioneye`
