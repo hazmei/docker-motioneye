@@ -1,3 +1,8 @@
+############################################################
+# Dockerfile to build motioneye container
+# Based on resin/rpi-raspbian:latest image
+############################################################
+
 FROM resin/rpi-raspbian:latest
 
 MAINTAINER hazmei
@@ -7,20 +12,22 @@ ENV INITSYSTEM on
 ENV TAG 0.1
 
 RUN apt-get update \
-	&& apt-get install -qy wget \
+	&& apt-get install -y wget \
 	libjpeg8 \
 	libjpeg8-dev \
 	python \
 	python-dev \
 	build-essential \
 	gcc \
-	nano \
-	apt-utils \
-	&& apt-get remove -qy libavcodec-extra-56 \
+	&& apt-get install -y v4l-utils \
+	&& echo 'bcm2835-v4l2' >> /etc/modules \
+	&& wget https://github.com/ccrisan/motioneye/wiki/precompiled/ffmpeg_3.1.1-1_armhf.deb \
+	&& dpkg -i ffmpeg_3.1.1-1_armhf.deb \
+	&& apt-get remove -y libavcodec-extra-56 \
 	libavformat56 \
 	libavresample2 \
 	libavutil54 \
-	&& apt-get install -qy python-pip \
+	&& apt-get install -y python-pip \
 	python-dev \
 	curl \
 	libssl-dev \
@@ -32,10 +39,6 @@ RUN apt-get update \
 	libmysqlclient18 \
 	libswscale3 \
 	libpq5 \
-	v4l-utils \
-	&& echo 'bcm2835-v4l2' >> /etc/modules \
-	&& wget https://github.com/ccrisan/motioneye/wiki/precompiled/ffmpeg_3.1.1-1_armhf.deb \
-	&& dpkg -i ffmpeg_3.1.1-1_armhf.deb \
 	&& wget https://github.com/Motion-Project/motion/releases/download/release-4.0.1/pi_jessie_motion_4.0.1-1_armhf.deb \
 	&& dpkg -i pi_jessie_motion_4.0.1-1_armhf.deb \
 	&& pip install motioneye \
@@ -44,7 +47,18 @@ RUN apt-get update \
 	&& mkdir -p /var/lib/motioneye \
 	&& cp /usr/local/share/motioneye/extra/motioneye.systemd-unit-local /etc/systemd/system/motioneye.service \
 	&& echo '# set to 'yes' to enable the motion daemon' > /etc/default/motion \
-	&& echo 'start_motion_daemon=yes' >> /etc/default/motion
+	&& echo 'start_motion_daemon=yes' >> /etc/default/motion \
+	&& rm ffmpeg_3.1.1-1_armhf.deb pi_jessie_motion_4.0.1-1_armhf.deb \
+	&& apt-get purge -y gcc \
+	wget \
+	motion \
+	&& apt-get autoremove -y \
+	&& apt-get clean \
+	&& apt-get install -y rpi-update \
+	motion \
+	&& rpi-update \
+	&& apt-get purge -y rpi-update \
+	&& apt-get clean
 
 EXPOSE 8765
 
@@ -52,6 +66,4 @@ USER root
 
 ENTRYPOINT []
 
-CMD modprobe bcm2835-v4l2
-#CMD service motion start
 CMD /usr/local/bin/meyectl startserver -c /etc/motioneye/motioneye.conf
