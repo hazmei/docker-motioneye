@@ -8,9 +8,14 @@ Container for motionEye, a web-based user interface for motion.
 
 ## Prerequisite:
 1. Enable camera module on rpi using `sudo raspi-config`
-2. Run the following command `sudo modprobe bcm2835-v4l2` so raspbian loads the module for the camera.
+2. Run the following command `sudo modprobe bcm2835-v4l2` so raspbian loads the module for the camera on boot.
+3. Install docker via `curl -sSL https://get.docker.com | sh`
+4. Motioneye data directory as well as motioneye setting directory and file exist in the directory specified. You will need the motioneye setting file (motioneye.conf) from this repo.
 
 ## Usage
 
 Fire up an instance with web interface available on port 8000:  
 `docker run -ti --device=/dev/video0 -p 8000:8765 -v ~/motioneye/setting:/etc/motioneye -v ~/motioneye/data:/var/lib/motioneye hazmei/motioneye`
+
+You may set your own directory for motioneye settings and data as well as the host port
+`docker run -ti --device=/dev/video0 -p <host_port>:8765 -v <host_motioneye_setting_dir>:/etc/motioneye -v <host_motioneye_data_dir>:/var/lib/motioneye hazmei/motioneye`
