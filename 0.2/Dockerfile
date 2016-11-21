@@ -43,6 +43,7 @@ RUN apt-get update \
 && wget https://github.com/Motion-Project/motion/releases/download/release-4.0.1/pi_jessie_motion_4.0.1-1_armhf.deb \
 	&& dpkg -i pi_jessie_motion_4.0.1-1_armhf.deb \
 	&& pip install motioneye \
+	&& pip install pytz \
 	&& mkdir -p /etc/motioneye \
 	&& cp /usr/local/share/motioneye/extra/motioneye.conf.sample /etc/motioneye/motioneye.conf \
 	&& mkdir -p /var/lib/motioneye \
