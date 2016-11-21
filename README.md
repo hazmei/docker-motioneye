@@ -15,9 +15,9 @@ Container for motionEye, a web-based user interface for motion.
 ## Usage
 
 Fire up an instance with web interface available on port 8000:  
-`docker run -ti --device=/dev/video0 -p 8000:8765 -v ~/motioneye/setting:/etc/motioneye -v ~/motioneye/data:/var/lib/motioneye hazmei/motioneye`
+`sudo docker run --restart=always -ti -d --device=/dev/video0 -p 8000:8765 -v ~/motioneye/setting:/etc/motioneye -v ~/motioneye/data:/var/lib/motioneye -v /etc/localtime:/etc/localtime:ro hazmei/motioneye`
 
-You may set your own directory for motioneye settings and data as well as the host port
+You may set your own directory for motioneye settings and data as well as the host port  
 `sudo docker run --restart=always -ti -d --device=/dev/video0 -p <host_port>:8765 -v <host_motioneye_setting_dir>:/etc/motioneye -v <host_motioneye_data_dir>:/var/lib/motioneye -v /etc/localtime:/etc/localtime:ro hazmei/motioneye`
 
 ## Building docker image from Dockerfile
